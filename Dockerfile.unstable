@@ -1,7 +1,13 @@
 FROM ubuntu:latest as builder
+ARG RESP3
 RUN apt update
 RUN apt install -y build-essential git
 RUN git clone https://github.com/redis/redis
+RUN echo RESP is $RESP3
+RUN \
+if [ $RESP3 -eq 1 ]; then \
+perl -i -pe 's/c->resp = 2/c->resp = 3/' redis/src/networking.c; \
+fi
 
 WORKDIR redis
 RUN make -C src
@@ -12,4 +18,4 @@ COPY --from=builder redis/src/redis-sentinel /usr/bin/redis-sentinel
 COPY --from=builder redis/src/redis-cli /usr/bin/redis-cli
 RUN chmod a+x /usr/bin/redis*
 
-#ENTRYPOINT ["/usr/bin/redis-server", "--protected-mode", "no"]
+ENTRYPOINT ["/usr/bin/redis-server", "--protected-mode", "no"]

@@ -16,6 +16,7 @@ services:
 
   redis-unstable-cluster:
     build:
+      context: .
       dockerfile: Dockerfile.cluster
     ports:
       - 46379:46379
@@ -33,11 +34,8 @@ services:
 
   redis-sentinel-unstable:
     build:
+      context: .
       dockerfile: Dockerfile.unstable
-    entrypoint:
-      - /usr/bin/redis-sentinel
-      - --protected-mode
-      - no
     ports:
       - 6479:6379
     profiles:
@@ -47,6 +45,7 @@ services:
 
   redis-sentinel-unstable-1:
     build:
+      context: .
       dockerfile: Dockerfile.unstable
     entrypoint:
       - /usr/bin/redis-sentinel
@@ -62,6 +61,7 @@ services:
 
   redis-sentinel-unstable-2:
     build:
+      context: .
       dockerfile: Dockerfile.unstable
     entrypoint:
       - /usr/bin/redis-sentinel
@@ -77,6 +77,7 @@ services:
 
   redis-sentinel-unstable-3:
     build:
+      context: .
       dockerfile: Dockerfile.unstable
     entrypoint:
       - /usr/bin/redis-sentinel
@@ -134,3 +135,82 @@ services:
       - redis7
       - standalone
       - all
+
+### resp3 specific environments ###
+  redis-unstable-cluster-resp3:
+    build:
+      context: .
+      dockerfile: Dockerfile.cluster
+      args:
+        RESP3: 1
+    ports:
+      - 46379:46379
+      - 46380:46380
+      - 46381:46381
+      - 46382:46382
+      - 46383:46383
+      - 46384:46384
+    volumes:
+      - "./cluster/redis.conf:/redis.conf"
+    profiles:
+      - resp3
+
+  redis-sentinel-unstable-resp3:
+    build:
+      context: .
+      dockerfile: Dockerfile.unstable
+      args:
+        RESP3: 1
+    ports:
+      - 6479:6379
+    profiles:
+      - resp3
+
+  redis-sentinel-unstable-1-resp3:
+    build:
+      context: .
+      dockerfile: Dockerfile.unstable
+      args:
+        RESP3: 1
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - /sentinel.conf
+    ports:
+      - 26479:26479
+    volumes:
+      - './sentinel/sentinel_1.conf:/sentinel.conf'
+    profiles:
+      - resp3
+
+  redis-sentinel-unstable-2-resp3:
+    build:
+      dockerfile: Dockerfile.unstable
+      args:
+        RESP3: 1
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - /sentinel.conf
+    ports:
+      - 26480:26480
+    volumes:
+      - './sentinel/sentinel_2.conf:/sentinel.conf'
+    profiles:
+      - resp3
+
+  redis-sentinel-unstable-3-resp3:
+    build:
+      context: .
+      dockerfile: Dockerfile.unstable
+      args:
+        RESP3: 1
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - /sentinel.conf
+    volumes:
+      - './sentinel/sentinel_3.conf:/sentinel.conf'
+    ports:
+      - 26481:26481
+    profiles:
+      - resp3
+
+

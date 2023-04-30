@@ -1,7 +1,13 @@
 FROM ubuntu:focal as builder
+ARG RESP3
 RUN apt update
 RUN apt install -y build-essential git
 RUN git clone https://github.com/redis/redis
+RUN echo RESP is $RESP3
+RUN \
+if [ $RESP3 -eq 1 ]; then \
+perl -i -pe 's/c->resp = 2/c->resp = 3/' redis/src/networking.c; \
+fi
 
 WORKDIR redis
 RUN make -C src
