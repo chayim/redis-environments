@@ -1,0 +1,15 @@
+FROM ubuntu:latest as builder
+RUN apt update
+RUN apt install -y build-essential git
+RUN git clone https://github.com/redis/redis
+
+WORKDIR redis
+RUN make -C src
+
+FROM ubuntu:latest
+COPY --from=builder redis/src/redis-server /usr/bin/redis-server
+COPY --from=builder redis/src/redis-sentinel /usr/bin/redis-sentinel
+COPY --from=builder redis/src/redis-cli /usr/bin/redis-cli
+RUN chmod a+x /usr/bin/redis*
+
+#ENTRYPOINT ["/usr/bin/redis-server", "--protected-mode", "no"]

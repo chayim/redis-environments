@@ -1,0 +1,136 @@
+---
+
+version: "3.8"
+
+services:
+
+  redis-stack-unstable:
+    image: redis/redis-stack-server:edge
+    ports:
+      - 6379:6379
+    profiles:
+      - modules
+      - unstable
+      - standalone
+      - all
+
+  redis-unstable-cluster:
+    build:
+      dockerfile: Dockerfile.cluster
+    ports:
+      - 46379:46379
+      - 46380:46380
+      - 46381:46381
+      - 46382:46382
+      - 46383:46383
+      - 46384:46384
+    volumes:
+      - "./cluster/redis.conf:/redis.conf"
+    profiles:
+      - modules
+      - cluster
+      - all
+
+  redis-sentinel-unstable:
+    build:
+      dockerfile: Dockerfile.unstable
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - --protected-mode
+      - no
+    ports:
+      - 6479:6379
+    profiles:
+      - sentinel
+      - unstable
+      - all
+
+  redis-sentinel-unstable-1:
+    build:
+      dockerfile: Dockerfile.unstable
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - /sentinel.conf
+    ports:
+      - 26479:26479
+    volumes:
+      - './sentinel/sentinel_1.conf:/sentinel.conf'
+    profiles:
+      - unstable
+      - sentinel
+      - all
+
+  redis-sentinel-unstable-2:
+    build:
+      dockerfile: Dockerfile.unstable
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - /sentinel.conf
+    ports:
+      - 26480:26480
+    volumes:
+      - './sentinel/sentinel_2.conf:/sentinel.conf'
+    profiles:
+      - unstable
+      - sentinel
+      - all
+
+  redis-sentinel-unstable-3:
+    build:
+      dockerfile: Dockerfile.unstable
+    entrypoint:
+      - /usr/bin/redis-sentinel
+      - /sentinel.conf
+    volumes:
+      - './sentinel/sentinel_3.conf:/sentinel.conf'
+    ports:
+      - 26481:26481
+    profiles:
+      - unstable
+      - sentinel
+      - all
+
+  redis5-standalone:
+    image: redis:5
+    ports:
+      - 15379:6379
+    profiles:
+      - redis5
+      - standalone
+      - all
+
+  redis6-standalone:
+    image: redis:6
+    ports:
+      - 16379:6379
+    profiles:
+      - redis6
+      - standalone
+      - all
+
+  redis62-standalone:
+    image: redis:6.2
+    ports:
+      - 26379:6379
+    profiles:
+      - redis6
+      - standalone
+      - all
+
+  redis7-standalone:
+    image: redis:7
+    ports:
+      - 17379:6379
+    profiles:
+      - redis7
+      - standalone
+      - all
+
+  redis72-standalone:
+    image: redis:7.2
+    ports:
+      - 27379:6379
+    profiles:
+      - redis7
+      - standalone
+      - all

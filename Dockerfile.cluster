@@ -1,0 +1,23 @@
+FROM ubuntu:focal as builder
+RUN apt update
+RUN apt install -y build-essential git
+RUN git clone https://github.com/redis/redis
+
+WORKDIR redis
+RUN make -C src
+
+FROM redis/redis-stack-server:latest as rss
+
+FROM ubuntu:focal
+RUN apt update
+RUN apt install -y libgomp1 libssl-dev
+COPY --from=builder redis/src/redis-server /usr/bin/redis-server
+COPY --from=builder redis/src/redis-sentinel /usr/bin/redis-sentinel
+COPY --from=builder redis/src/redis-cli /usr/bin/redis-cli
+RUN mkdir -p /usr/lib/redis/modules
+COPY --from=rss /opt/redis-stack/lib/*.so /usr/lib/redis/modules
+COPY cluster/create_redismod_cluster.sh /create_redismod_cluster.sh
+
+RUN chmod a+x /usr/bin/redis* /create_redismod_cluster.sh
+
+ENTRYPOINT [ "/create_redismod_cluster.sh"]
