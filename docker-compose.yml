@@ -9,9 +9,23 @@ services:
     ports:
       - 6379:6379
     profiles:
-      - modules
+      - redis-stack
       - unstable
       - standalone
+      - all
+
+  redis-stack-unstable-replica:
+    image: redis/redis-stack-server:edge
+    entrypoint:
+      - /opt/redis-stack/bin/redis-stack-server
+      - --port 6380
+      - --replicaof redis-stack-unstable 6379
+    ports:
+      - 6380:6379
+    profiles:
+      - redis-stack
+      - unstable
+      - replica
       - all
 
   redis-unstable-cluster:
@@ -28,7 +42,7 @@ services:
     volumes:
       - "./cluster/redis.conf:/redis.conf"
     profiles:
-      - modules
+      - redis-stack
       - cluster
       - all
 
@@ -128,7 +142,7 @@ services:
       - all
 
   redis72-standalone:
-    image: redis:7.2
+    image: redis:7.2-rc
     ports:
       - 27379:6379
     profiles:
@@ -154,6 +168,7 @@ services:
       - "./cluster/redis.conf:/redis.conf"
     profiles:
       - resp3
+      - all
 
   redis-sentinel-unstable-resp3:
     build:
@@ -162,9 +177,23 @@ services:
       args:
         RESP3: 1
     ports:
-      - 6479:6379
+      - 6579:6379
     profiles:
       - resp3
+      - all
+
+  redis-stack-unstable-replica-resp3:
+    image: redis/redis-stack-server:edge
+    entrypoint:
+      - /opt/redis-stack/bin/redis-stack-server
+      - --port 6579
+      - --replicaof redis-sentinel-unstable-resp3 6379
+    ports:
+      - 6380:6379
+    profiles:
+      - resp3
+      - all
+
 
   redis-sentinel-unstable-1-resp3:
     build:
@@ -181,6 +210,7 @@ services:
       - './sentinel/sentinel_1.conf:/sentinel.conf'
     profiles:
       - resp3
+      - all
 
   redis-sentinel-unstable-2-resp3:
     build:
@@ -196,6 +226,7 @@ services:
       - './sentinel/sentinel_2.conf:/sentinel.conf'
     profiles:
       - resp3
+      - all
 
   redis-sentinel-unstable-3-resp3:
     build:
@@ -212,5 +243,4 @@ services:
       - 26481:26481
     profiles:
       - resp3
-
-
+      - all
