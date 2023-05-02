@@ -214,6 +214,7 @@ services:
 
   redis-sentinel-unstable-2-resp3:
     build:
+      context: .
       dockerfile: Dockerfile.unstable
       args:
         RESP3: 1
