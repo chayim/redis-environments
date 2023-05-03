@@ -2,9 +2,11 @@
 
 Note: This repository requires a version of docker-compose with support for profiles.
 
-This repository contains the base docker files, and a docker-compose that helps create various redis environments. It relies on [docker profiles](https://docs.docker.com/compose/profiles/) to ensure that collections of dockers can be started, rather than starting everything, or just specific named items.  Below are some examples:
+This repository contains the base docker files, and a docker-compose that helps create various redis environments. It relies on [docker profiles](https://docs.docker.com/compose/profiles/) to ensure that collections of dockers can be started, rather than starting everything, or just specific named items.  Environments in this repository, rely on the *.env* file, for setting exposed ports. If you want to change the ports for your needs - modify the .env file, or pass in an explicit dotnet to docker-compose by changing commands to ```docker-compose --env-file <your file>...```
 
-**To start everything**
+Examples:
+
+**To start all non RESP3 dockers**
 
 ```bash
 docker-compose --profile all up
