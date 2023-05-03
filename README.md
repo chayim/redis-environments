@@ -1,5 +1,7 @@
 # redis-environments
 
+Note: This repository requires a version of docker-compose with support for profiles.
+
 This repository contains the base docker files, and a docker-compose that helps create various redis environments. It relies on [docker profiles](https://docs.docker.com/compose/profiles/) to ensure that collections of dockers can be started, rather than starting everything, or just specific named items.  Below are some examples:
 
 **To start everything**

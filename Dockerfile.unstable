@@ -1,8 +1,8 @@
 FROM ubuntu:latest as builder
 ARG RESP3
-RUN apt update
-RUN apt install -y build-essential git
-RUN git clone https://github.com/redis/redis
+RUN apt update --fix-missing -qq
+RUN apt install -qqy build-essential git
+RUN git clone --depth 1 https://github.com/redis/redis
 RUN echo RESP is $RESP3
 RUN \
 if [ $RESP3 -eq 1 ]; then \
