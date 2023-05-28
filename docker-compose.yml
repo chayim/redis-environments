@@ -119,6 +119,9 @@ services:
     image: redis:6
     ports:
       - ${REDIS_6_PORT}:6379
+    entrypoint:
+      - /usr/local/bin/redis-server
+      - --protected-mode no
     profiles:
       - redis6
       - standalone
@@ -128,6 +131,9 @@ services:
     image: redis:6.2
     ports:
       - ${REDIS_62_PORT}:6379
+    entrypoint:
+      - /usr/local/bin/redis-server
+      - --protected-mode no
     profiles:
       - redis6
       - standalone
@@ -137,6 +143,11 @@ services:
     image: redis:7
     ports:
       - ${REDIS_7_PORT}:6379
+    entrypoint:
+      - /usr/local/bin/redis-server
+      - --protected-mode no
+      - --enable-module-command yes
+      - --enable-debug-command yes
     profiles:
       - redis7
       - standalone
@@ -146,6 +157,11 @@ services:
     image: redis:7.2-rc
     ports:
       - ${REDIS_72_PORT}:6379
+    entrypoint:
+      - /usr/local/bin/redis-server
+      - --protected-mode no
+      - --enable-module-command yes
+      - --enable-debug-command yes
     profiles:
       - redis7
       - standalone

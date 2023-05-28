@@ -32,6 +32,7 @@ EOF
 
   set -x
   redis-server /nodes/$PORT/redis.conf
+  sleep 1
   if [ $? -ne 0 ]; then
     echo "Redis failed to start, exiting."
     continue
