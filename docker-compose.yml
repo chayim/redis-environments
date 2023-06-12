@@ -8,6 +8,8 @@ services:
     image: redis/redis-stack-server:edge
     ports:
       - ${REDIS_UNSTABLE_PORT}:6379
+    environment:
+      - "REDIS_ARGS=--enable-debug-command yes --enable-module-command yes"
     profiles:
       - redis-stack
       - unstable
